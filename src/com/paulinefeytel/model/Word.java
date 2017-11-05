@@ -1,4 +1,4 @@
-package com.paulinefeytel;
+package com.paulinefeytel.model;
 
 /**
  *  This class contains a word, its translation and keeps track of the score.

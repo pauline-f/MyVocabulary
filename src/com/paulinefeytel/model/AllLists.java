@@ -1,4 +1,4 @@
-package com.paulinefeytel;
+package com.paulinefeytel.model;
 
 import java.util.ArrayList;
 
@@ -27,6 +27,11 @@ public class AllLists {
         }
     }
 
+    /**
+     * Allow to find a list
+     * @param name
+     * @return
+     */
     public ListWord findAList(String name) {
         for (ListWord list: lists) {
             if (list.getName().equals(name)) {

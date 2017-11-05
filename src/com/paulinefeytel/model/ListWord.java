@@ -1,4 +1,4 @@
-package com.paulinefeytel;
+package com.paulinefeytel.model;
 
 import java.util.ArrayList;
 
@@ -67,8 +67,13 @@ public class ListWord {
         return listWord.get(index);
     }
 
-    public String getOneWord(int index) {
-        return listWord.get(index).getWord() + ";" + listWord.get(index).getTranslation() + ";" + listWord.get(index).getScore() + ";" + listWord.get(index).getCount();
+    /**
+     * @param index The index of the Word to be returned. It has to be a valid index, otherwise it will throw an exception.
+     * @return the Word formatted for CSV
+     */
+    public String getWordAsCSV(int index) {
+        Word word = listWord.get(index);
+        return word.getWord() + ";" + word.getTranslation() + ";" + word.getScore() + ";" + word.getCount();
     }
 
     public String getWord(int index) {
