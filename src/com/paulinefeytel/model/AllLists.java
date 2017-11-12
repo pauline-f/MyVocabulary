@@ -28,9 +28,9 @@ public class AllLists {
     }
 
     /**
-     * Allow to find a list
+     * Allow to find a list with the name
      * @param name
-     * @return
+     * @return the list of word found
      */
     public ListWord findAList(String name) {
         for (ListWord list: lists) {

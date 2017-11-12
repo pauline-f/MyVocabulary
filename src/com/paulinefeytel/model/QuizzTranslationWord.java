@@ -4,9 +4,6 @@ import java.util.Random;
 
 public class QuizzTranslationWord extends Quizz {
 
-    ListWord listWord;
-    int lastIndex = -1;
-
     public QuizzTranslationWord(ListWord list) {
 
         this.listWord = list;
@@ -28,7 +25,6 @@ public class QuizzTranslationWord extends Quizz {
     public Boolean correctAnswer(String input) {
         return listWord.getWord(lastIndex).equals(input);
     }
-
 
 
 }
