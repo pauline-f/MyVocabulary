@@ -75,15 +75,4 @@ public class ListWord {
         Word word = listWord.get(index);
         return word.getWord() + ";" + word.getTranslation() + ";" + word.getScore() + ";" + word.getCount();
     }
-
-    public String getWord(int index) {
-
-        return listWord.get(index).getWord();
-    }
-
-    public String getTranslation(int index) {
-
-        return listWord.get(index).getTranslation();
-    }
-
 }

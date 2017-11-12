@@ -11,18 +11,21 @@ public class QuizzWordTranslation extends Quizz {
     @Override
     public String displayWord() {
         Random randomWord = new Random();
-        lastIndex= randomWord.nextInt(listWord.numberOfWords());
-        return listWord.getWord(lastIndex);
+        int index= randomWord.nextInt(listWord.numberOfWords());
+        currentWord = listWord.getAWord(index);
+        return currentWord.getWord();
     }
 
     @Override
     public String goodAnswer() {
-        return listWord.getTranslation(lastIndex);
+
+        return currentWord.getTranslation();
     }
 
     @Override
     public Boolean correctAnswer(String input) {
-        return listWord.getTranslation(lastIndex).equals(input);
+
+        return currentWord.getTranslation().equals(input);
     }
     
 }

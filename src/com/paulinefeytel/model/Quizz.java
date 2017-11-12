@@ -5,17 +5,18 @@ package com.paulinefeytel.model;
  */
 public abstract class Quizz {
     ListWord listWord;
-    int lastIndex = -1;
+    Word currentWord;
 
     public abstract String displayWord();
     public abstract Boolean correctAnswer(String input);
     public abstract String goodAnswer();
     public void setCount() {
-        listWord.getAWord(lastIndex).incrementCount();
+
+        currentWord.incrementCount();
     }
 
     public void setScore() {
 
-        listWord.getAWord(lastIndex).incrementScore();
+        currentWord.incrementScore();
     }
 }
