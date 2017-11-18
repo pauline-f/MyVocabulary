@@ -2,13 +2,14 @@ package com.paulinefeytel.view;
 
 import java.util.Scanner;
 
-
+/**
+ * Allow reading from the terminal window
+ *
+ */
 public class Parser {
     private Scanner reader;
+    private String[] words;
 
-    /**
-     * Create a parser to read from the terminal window.
-     */
     public Parser() {
         reader = new Scanner(System.in);
     }
@@ -20,27 +21,9 @@ public class Parser {
         return inputLine.trim();
     }
 
-    public static class Command {
-        private String input;
-        private String[] words;
-
-        public Command(String input) {
-            this.input = input.trim();
-            words = input.split(" ");
-        }
-
-        public String getInput() {
-            return input;
-        }
-
-        public void setInput(String input) {
-            this.input = input;
-        }
-
-
-        public String firstWordCommand() {
-            String first = words[0].toUpperCase();
-            return first;
-        }
+    public String command(String input) {
+        String inputCommand = input.trim();
+        words = inputCommand.split(" ");
+        return words[0].toUpperCase();
     }
 }

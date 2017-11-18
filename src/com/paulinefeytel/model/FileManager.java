@@ -5,11 +5,20 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+
+/**
+ *  This class allows to write and read the file "app.csv".
+ *  When it writes, it writes the class data in the file.
+ *  When it reads, it reads the file and put the data in the classes.
+ */
 public class FileManager {
-    public static final String FILENAME = "app.csv";
+    private static final String FILENAME = "app.csv";
 
-
-    public void saveCommand(AllLists lists) {
+    /**
+     * Write the data in the file. CSV format
+     * @param lists
+     */
+    public void saveFile(AllLists lists) {
         try (PrintWriter writer = new PrintWriter(FILENAME)) {
             for (int i = 0; i < lists.lists.size(); i++) {
                 for (int j = 0; j < lists.lists.get(i).numberOfWords(); j++) {
@@ -23,6 +32,10 @@ public class FileManager {
         }
     }
 
+    /**
+     * Reads the file and put the data in the classes
+     * @return AllLists
+     */
     public AllLists readFile() {
         AllLists lists = new AllLists();
         try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
@@ -45,29 +58,25 @@ public class FileManager {
                         }
                     }
 
-                    if (newList == false) {
-                        //System.out.println("New list!");
-                        ListWord list = new ListWord(wordFile[0]);
-                        list.addWord(word);
-                        lists.addList(list);
+                    if (!newList) {
+                        addListAndWord(lists, wordFile[0], word);
                     } else {
                         lists.lists.get(i).addWord(word);
-                        //System.out.println("List exists!");
                     }
                 } else {
-                    //System.out.println("List!");
-                    ListWord list = new ListWord(wordFile[0]);
-                    list.addWord(word);
-
-                    lists.addList(list);
+                    addListAndWord(lists, wordFile[0], word);
                 }
-
-                //System.out.println(currentLine);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return lists;
+    }
+
+    private void addListAndWord(AllLists lists, String name, Word word) {
+        ListWord list = new ListWord(name);
+        list.addWord(word);
+        lists.addList(list);
     }
 
 }

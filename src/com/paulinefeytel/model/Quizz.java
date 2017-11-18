@@ -7,16 +7,36 @@ public abstract class Quizz {
     ListWord listWord;
     Word currentWord;
 
+    /**
+     * Display a word or a translation
+     * @return a String with a word or a translation
+     */
     public abstract String displayWord();
-    public abstract Boolean correctAnswer(String input);
-    public abstract String goodAnswer();
-    public void setCount() {
 
+    /**
+     * Check if the input if the good word or the good translation
+     * @param input
+     * @return boolean
+     */
+    public abstract boolean isGoodAnswer(String input);
+
+    /**
+     * Return the word or the translation which is the good answer
+     * @return
+     */
+    public abstract String getGoodAnswer();
+
+    /**
+     * Increment count each time the user write the answer
+     */
+    public void incrementCount() {
         currentWord.incrementCount();
     }
 
-    public void setScore() {
-
+    /**
+     * Increment score each time the user has a good answer
+     */
+    public void incrementScore() {
         currentWord.incrementScore();
     }
 }

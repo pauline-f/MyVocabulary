@@ -1,7 +1,7 @@
 package com.paulinefeytel.model;
 
 /**
- *  This class contains a word, its translation and keeps track of the score.
+ *  This class contains a word, its translation, and keeps track of the score.
  *
  */
 public class Word {
@@ -9,6 +9,13 @@ public class Word {
     private String translation;
     private int count;
     private int score;
+
+    public Word(String word, String translation) {
+        this.word = word;
+        this.translation = translation;
+        this.score = 0;
+        this.count = 0;
+    }
 
     public Word(String word, String translation, int score, int count) {
         this.word = word;
@@ -33,8 +40,8 @@ public class Word {
         return score;
     }
 
-    public void displayWord() {
-        System.out.println(word + " - " + translation);
+    public String getWordAsString() {
+        return word + " - " + translation;
     }
 
     /**
@@ -51,8 +58,11 @@ public class Word {
         this.score++;
     }
 
-    public void displayWordWithScore() {
-        double percentage = score/count*100;
-        System.out.println(word + " - " + translation + " - Score: " + score + " / " + count + " - " + percentage + "%");
+    public String getWordWithScore() {
+        double percentage = 0;
+        if (count != 0) {
+            percentage = score / count * 100;
+        }
+        return word + " - " + translation + " - Score: " + score + " / " + count + " - " + percentage + "%";
     }
 }

@@ -17,15 +17,12 @@ public class QuizzWordTranslation extends Quizz {
     }
 
     @Override
-    public String goodAnswer() {
-
+    public String getGoodAnswer() {
         return currentWord.getTranslation();
     }
 
     @Override
-    public Boolean correctAnswer(String input) {
-
+    public boolean isGoodAnswer(String input) {
         return currentWord.getTranslation().equals(input);
     }
-    
 }

@@ -2,14 +2,14 @@ package com.paulinefeytel.tests;
 
 import com.paulinefeytel.model.ListWord;
 import com.paulinefeytel.model.Quizz;
-import com.paulinefeytel.model.QuizzTranslationWord;
+import com.paulinefeytel.model.QuizzWordTranslation;
 import com.paulinefeytel.model.Word;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class QuizzTranslationWordTest {
+public class QuizzWordTranslationTest {
     ListWord list;
 
     @Before
@@ -21,23 +21,22 @@ public class QuizzTranslationWordTest {
 
     @Test
     public void displayWord() {
-        Quizz quizz = new QuizzTranslationWord(list);
-        assertEquals("Blå", quizz.displayWord());
+        Quizz quizz = new QuizzWordTranslation(list);
+        assertEquals("Blue", quizz.displayWord());
     }
 
     @Test
     public void getGoodAnswer() {
-        Quizz quizz = new QuizzTranslationWord(list);
+        Quizz quizz = new QuizzWordTranslation(list);
         quizz.displayWord();
-        assertEquals("Blue", quizz.getGoodAnswer());
+        assertEquals("Blå", quizz.getGoodAnswer());
     }
 
     @Test
     public void isGoodAnswer() {
-        Quizz quizz = new QuizzTranslationWord(list);
+        Quizz quizz = new QuizzWordTranslation(list);
         quizz.displayWord();
-        assertTrue(quizz.isGoodAnswer("Blue"));
-        assertFalse(quizz.isGoodAnswer("Röd"));
+        assertTrue(quizz.isGoodAnswer("Blå"));
+        assertFalse(quizz.isGoodAnswer("Gul"));
     }
-
 }

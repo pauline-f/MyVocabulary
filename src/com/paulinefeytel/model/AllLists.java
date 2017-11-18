@@ -40,4 +40,12 @@ public class AllLists {
         }
         return null;
     }
+
+    public boolean findList(String name) {
+        if (findAList(name) == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
 }

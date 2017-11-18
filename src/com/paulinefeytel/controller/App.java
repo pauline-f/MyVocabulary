@@ -5,78 +5,91 @@ import com.paulinefeytel.model.FileManager;
 import com.paulinefeytel.view.Parser;
 
 public class App {
-    AllLists allLists;
-    Quizz quizz;
+    private AllLists allLists;
     private Parser parser;
-    public FileManager fileManager;
+    private FileManager fileManager;
 
     public App() {
-        allLists = new AllLists();
         parser = new Parser();
         fileManager = new FileManager();
     }
 
-    public void displayAllLists() {
+    public void loadLists() {
+        allLists = fileManager.readFile();
+    }
+
+    private void displayAllLists() {
         allLists.displayAllLists();
     }
 
     public ListWord createNewList(String name) {
-        ListWord list = new ListWord(name);
-        allLists.addList(list);
-        return list;
+        if (allLists.findList(name)) {
+            System.out.println("This list already exists!");
+        } else {
+            ListWord list = new ListWord(name);
+            allLists.addList(list);
+            return list;
+        }
+        return null;
     }
 
-    /**
-     * Messages for command line and to manage the commands.
-     */
-    public void msgWelcome() {
-        allLists = fileManager.readFile();
-        System.out.println("Welcome! With this app, you can create allLists for learn new vocabulary in a new language and try to remember them with quizzs.");
+    public void showWelcomeMessage() {
+        System.out.println("Welcome! With this app, you can create lists for learn new vocabulary in a new language and try to remember them with quizzs.");
         System.out.println("For the moment, you have " + allLists.lists.size() + " list(s).");
         System.out.println("Write 'HELP' if you need more informations.");
         command(parser.write());
     }
 
-
+    /**
+     * Manage the command input
+     * @param input This is user input
+     */
     public void command(String input) {
-        Parser.Command command = new Parser.Command(input);
-        String first = command.firstWordCommand();
+        String first = parser.command(input);
 
-        switch (first) {
-            case "HELP":
-                helpCommand();
-                break;
-            case "CREATE":
-                createCommand();
-                break;
-            case "LISTS":
-                listsCommand();
-                break;
-            case "ADD":
-                addCommand();
-                break;
-            case "REMOVE":
-                removeCommand();
-                break;
-            case "WORDS":
-                wordsCommand();
-                break;
-            case "SCORE":
-                scoreCommand();
-                break;
-            case "SAVE":
-                fileManager.saveCommand(allLists);
-                break;
-            case "QUIZZ":
-                quizzCommand();
-                break;
-            default:
-                System.out.println("This command doesn't work!");
-                helpCommand();
-                break;
+        while (first != "QUIT") {
+            switch (first) {
+                case "HELP":
+                    helpCommand();
+                    break;
+                case "CREATE":
+                    createCommand();
+                    break;
+                case "LISTS":
+                    listsCommand();
+                    break;
+                case "ADD":
+                    addCommand();
+                    break;
+                case "REMOVE":
+                    removeCommand();
+                    break;
+                case "WORDS":
+                    wordsCommand();
+                    break;
+                case "SCORE":
+                    scoreCommand();
+                    break;
+                case "SAVE":
+                    fileManager.saveFile(allLists);
+                    break;
+                case "QUIZZ":
+                    quizzCommand();
+                    break;
+                case "QUIT":
+                    System.exit(0);
+                default:
+                    System.out.println("Unknown command!");
+                    helpCommand();
+                    break;
+            }
+            command(parser.write());
         }
     }
 
+    /**
+     * Manage the command for the quizzes
+     */
     private void quizzCommand() {
         System.out.println("Choose your quizz:");
         System.out.println("Write '1' if you want to write the translation of a word");
@@ -84,12 +97,11 @@ public class App {
         String input = (parser.write());
 
         if (input.equals("1") || input.equals("2")) {
-
             ListWord list = selectList();
             if (list != null) {
                 stopCommand();
                 Quizz quizz = QuizzFactory.getQuizz(input, list);
-                quizz(quizz);
+                playQuizz(quizz);
             } else {
                 System.out.println("This list doesn't exist!");
                 quizzCommand();
@@ -101,8 +113,12 @@ public class App {
         }
     }
 
-    public void quizz(Quizz quizz) {
-
+    /**
+     * Manage the quizz: display the word or the translation, check the answer written by the user and
+     * display the good answer if the user is wrong
+     * @param quizz
+     */
+    private void playQuizz(Quizz quizz) {
         String wordQuizz = quizz.displayWord();
         System.out.println(wordQuizz);
 
@@ -110,38 +126,47 @@ public class App {
 
         if (input.toUpperCase().equals("STOP")) {
             helpCommand();
-        }
-        else if (quizz.correctAnswer(input)) {
+        } else if (quizz.isGoodAnswer(input)) {
             System.out.println("Good Answer!");
-            quizz.setCount();
-            quizz.setScore();
-            quizz(quizz);
+            quizz.incrementCount();
+            quizz.incrementScore();
+            playQuizz(quizz);
+        } else {
+            System.out.println("The answer was: " + quizz.getGoodAnswer());
+            quizz.incrementCount();
+            playQuizz(quizz);
         }
-        else {
-            System.out.println("The answer was: " + quizz.goodAnswer());
-            quizz.setCount();
-            quizz(quizz);
-        }
-
-
     }
 
-    public void scoreCommand() {
+    /**
+     * Display all the words of a list with the score
+     */
+    private void scoreCommand() {
         ListWord list = selectList();
-
-        list.displayAllWordWithScore();
+        if (list != null) {
+            System.out.println(list.displayAllWordWithScore());
+        } else {
+            System.out.println("This list doesn't exist!");
+            scoreCommand();
+        }
     }
 
-    public ListWord selectList() {
+    /**
+     * Lets the user input a list name, and tries to return it.
+     * @return list if found, otherwise null
+     */
+    private ListWord selectList() {
         System.out.println("Choose a list:");
         displayAllLists();
 
         String inputList = parser.write();
         return allLists.findAList(inputList);
-
     }
 
-    public void helpCommand() {
+    /**
+     * Displays all the commands that the user can write
+     */
+    private void helpCommand() {
         System.out.println("Write 'CREATE' if you want create a list.");
         System.out.println("Write 'LISTS' if you want display all the allLists.");
         System.out.println("Write 'ADD' if you want add words in a list.");
@@ -151,31 +176,40 @@ public class App {
         System.out.println("Write 'SCORE' if you want display your score." );
         System.out.println("Write 'SAVE' if you want to save the data in a fileManager.");
         System.out.println("Write 'QUIT' if you want to quit the application.");
-        command(parser.write());
     }
 
-    public void stopCommand() {
-
-        System.out.println("Write 'STOP' if you are finish.");
+    /**
+     * Allows the user to stop writing words or stopping a quizz
+     */
+    private void stopCommand() {
+        System.out.println("Write 'STOP' if you are done.");
     }
 
-    public void createCommand() {
+    /**
+     * Allows the user to create a new list
+     */
+    private void createCommand() {
         System.out.println("Write the name of your list: ");
         createNewList(parser.write());
         helpCommand();
     }
 
-    public void listsCommand() {
+    /**
+     * Displays all the lists
+     */
+    private void listsCommand() {
         System.out.println("You have " + allLists.countLists() + " list(s):");
         displayAllLists();
         command(parser.write());
     }
 
-
-    public void addCommand() {
+    /**
+     * Allows adding words in a list. The user can create the list before adding words
+     */
+    private void addCommand() {
         ListWord list = selectList();
         if (list != null) {
-            addWord(list.getName());
+            addWord(list);
         }
         else {
             System.out.println("This list doesn't exist!");
@@ -183,55 +217,65 @@ public class App {
         }
     }
 
-    public void addWord(String list) {
+    /**
+     * Allows adding word and translation in a list
+     * @param listWord
+     */
+    private void addWord(ListWord listWord) {
         System.out.println("Write your word:");
         String word = parser.write();
 
         if (word.trim().toUpperCase().equals("STOP")) {
             helpCommand();
-        }
-        else {
+        } else {
             System.out.println("Write your translation:");
             String translation = parser.write();
 
-            Word completeWord = new Word(word, translation, 0, 0);
+            Word completeWord = new Word(word, translation);
 
-            ListWord listWord = allLists.findAList(list);
-            listWord.addWord(completeWord);
-
-            System.out.println("You added this word: ");
-            completeWord.displayWord();
-            stopCommand();
-            addWord(list);
+            if (listWord.findWord(word)) {
+                System.out.println("This word already exists");
+                addWord(listWord);
+            } else {
+                listWord.addWord(completeWord);
+                System.out.println("You added this word: " + word);
+                completeWord.getWordAsString();
+                stopCommand();
+                addWord(listWord);
+            }
         }
     }
 
-    public void wordsCommand() {
-
+    /**
+     * Displays all the words of a list. The user must write the name of the list before
+     */
+    private void wordsCommand() {
         ListWord list = selectList();
 
-        list.displayNumberOfWords();
-        list.displayAllWords();
+        System.out.println(list.displayNumberOfWords());
+        System.out.println(list.displayAllWords());
 
         helpCommand();
     }
 
-    public void removeCommand() {
+    /**
+     * Removes a word. The user must write the name of the list before
+     */
+    private void removeCommand() {
         ListWord list = selectList();
 
-        list.displayAllWordsWithIndex();
+        System.out.println(list.displayAllWordsWithIndex());
 
         System.out.println("Choose a word: ");
 
         int index = Integer.parseInt(parser.write()) -1;
 
-
         if (list.removeWord(index)) {
+            System.out.println("The word was removed");
             helpCommand();
-        }
-        else {
+        } else {
+            System.out.println("You must write the number of the word.");
             removeCommand();
         }
     }
-
 }

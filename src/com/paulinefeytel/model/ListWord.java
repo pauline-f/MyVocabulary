@@ -3,7 +3,7 @@ package com.paulinefeytel.model;
 import java.util.ArrayList;
 
 /**
- *  This class contains an ArrayList of Word and a name.
+ *  This class contains the list of Word and the list name.
  */
 public class ListWord {
     private ArrayList<Word> listWord;
@@ -19,7 +19,6 @@ public class ListWord {
     }
 
     public void addWord(Word word) {
-
         listWord.add(word);
     }
 
@@ -27,12 +26,11 @@ public class ListWord {
         return listWord.size();
     }
 
-    public void displayNumberOfWords() {
-        System.out.println("The list " + name + " has " + numberOfWords() + " words.");
+    public String displayNumberOfWords() {
+        return "The list " + name + " has " + numberOfWords() + " words.";
     }
 
     public boolean removeWord(int index) {
-
         if (index >= 0 && index < listWord.size()) {
             listWord.remove(index);
             return true;
@@ -43,24 +41,46 @@ public class ListWord {
         }
     }
 
-    public void displayAllWords() {
-        for (Word word: listWord) {
-            word.displayWord();
+    public boolean findWord(String word) {
+        int i = 0;
+        boolean find = false;
+        while (i < listWord.size() && !find) {
+            if (listWord.get(i).getWord().equals(word)) {
+                find = true;
+            }
+            i++;
+        }
+        if (find == true) {
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public void displayAllWordsWithIndex() {
+    public String displayAllWords() {
+        StringBuilder display = new StringBuilder();
+        for (Word word: listWord) {
+            display.append(word.getWordAsString()).append("\n");
+        }
+        return display.toString();
+    }
+
+    public String displayAllWordsWithIndex() {
+        StringBuilder display = new StringBuilder();
         int index = 1;
         for (int i = 0; i < listWord.size(); i++) {
-            System.out.println(index + " - " + listWord.get(i).getWord() + " - " + listWord.get(i).getTranslation());
+            display.append(index + " - " + listWord.get(i).getWord() + " - " + listWord.get(i).getTranslation()).append("\n");
             index++;
         }
+        return display.toString();
     }
 
-    public void displayAllWordWithScore() {
+    public String displayAllWordWithScore() {
+        StringBuilder words = new StringBuilder();
         for (Word word: listWord) {
-            word.displayWordWithScore();
+            words.append(word.getWordWithScore()).append("\n");
         }
+        return words.toString();
     }
 
     public Word getAWord(int index) {
