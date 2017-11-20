@@ -21,6 +21,11 @@ public class Parser {
         return inputLine.trim();
     }
 
+    /**
+     * Gets the first word typed by the user
+     * @param input Input typed by the user
+     * @return the first word
+     */
     public String command(String input) {
         String inputCommand = input.trim();
         words = inputCommand.split(" ");

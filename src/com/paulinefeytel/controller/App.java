@@ -8,10 +8,12 @@ public class App {
     private AllLists allLists;
     private Parser parser;
     private FileManager fileManager;
+    private Quizz quizz;
 
     public App() {
         parser = new Parser();
         fileManager = new FileManager();
+        allLists = new AllLists();
     }
 
     public void loadLists() {
@@ -25,17 +27,17 @@ public class App {
     public ListWord createNewList(String name) {
         if (allLists.findList(name)) {
             System.out.println("This list already exists!");
+            return null;
         } else {
             ListWord list = new ListWord(name);
             allLists.addList(list);
             return list;
         }
-        return null;
     }
 
     public void showWelcomeMessage() {
         System.out.println("Welcome! With this app, you can create lists for learn new vocabulary in a new language and try to remember them with quizzs.");
-        System.out.println("For the moment, you have " + allLists.lists.size() + " list(s).");
+        System.out.println("For the moment, you have " + allLists.list.size() + " list(s).");
         System.out.println("Write 'HELP' if you need more informations.");
         command(parser.write());
     }
@@ -47,7 +49,7 @@ public class App {
     public void command(String input) {
         String first = parser.command(input);
 
-        while (first != "QUIT") {
+        while (!first.equals("QUIT")) {
             switch (first) {
                 case "HELP":
                     helpCommand();
@@ -72,12 +74,11 @@ public class App {
                     break;
                 case "SAVE":
                     fileManager.saveFile(allLists);
+                    helpCommand();
                     break;
                 case "QUIZZ":
                     quizzCommand();
                     break;
-                case "QUIT":
-                    System.exit(0);
                 default:
                     System.out.println("Unknown command!");
                     helpCommand();
@@ -100,8 +101,8 @@ public class App {
             ListWord list = selectList();
             if (list != null) {
                 stopCommand();
-                Quizz quizz = QuizzFactory.getQuizz(input, list);
-                playQuizz(quizz);
+                quizz = QuizzFactory.getQuizz(input, list);
+                playQuizz();
             } else {
                 System.out.println("This list doesn't exist!");
                 quizzCommand();
@@ -116,9 +117,8 @@ public class App {
     /**
      * Manage the quizz: display the word or the translation, check the answer written by the user and
      * display the good answer if the user is wrong
-     * @param quizz
      */
-    private void playQuizz(Quizz quizz) {
+    private void playQuizz() {
         String wordQuizz = quizz.displayWord();
         System.out.println(wordQuizz);
 
@@ -130,11 +130,11 @@ public class App {
             System.out.println("Good Answer!");
             quizz.incrementCount();
             quizz.incrementScore();
-            playQuizz(quizz);
+            playQuizz();
         } else {
             System.out.println("The answer was: " + quizz.getGoodAnswer());
             quizz.incrementCount();
-            playQuizz(quizz);
+            playQuizz();
         }
     }
 
@@ -145,6 +145,7 @@ public class App {
         ListWord list = selectList();
         if (list != null) {
             System.out.println(list.displayAllWordWithScore());
+            helpCommand();
         } else {
             System.out.println("This list doesn't exist!");
             scoreCommand();
@@ -200,7 +201,7 @@ public class App {
     private void listsCommand() {
         System.out.println("You have " + allLists.countLists() + " list(s):");
         displayAllLists();
-        command(parser.write());
+        helpCommand();
     }
 
     /**
@@ -252,10 +253,15 @@ public class App {
     private void wordsCommand() {
         ListWord list = selectList();
 
-        System.out.println(list.displayNumberOfWords());
-        System.out.println(list.displayAllWords());
+        if (list != null) {
+            System.out.println(list.displayNumberOfWords());
+            System.out.println(list.displayAllWords());
+            helpCommand();
+        } else {
+            System.out.println("This list doesn't exist!");
+            wordsCommand();
+        }
 
-        helpCommand();
     }
 
     /**
@@ -264,17 +270,28 @@ public class App {
     private void removeCommand() {
         ListWord list = selectList();
 
-        System.out.println(list.displayAllWordsWithIndex());
+        if (list != null) {
+            System.out.println(list.displayAllWordsWithIndex());
+            System.out.println("Choose a word: ");
 
-        System.out.println("Choose a word: ");
+            int index = -1;
+            try {
+                index = Integer.parseInt(parser.write()) -1;
+            }
+            catch (NumberFormatException e) {
+                System.out.println("You must write a number!");
+                removeCommand();
+            }
 
-        int index = Integer.parseInt(parser.write()) -1;
-
-        if (list.removeWord(index)) {
-            System.out.println("The word was removed");
-            helpCommand();
+            if (list.removeWord(index)) {
+                System.out.println("The word was removed");
+                helpCommand();
+            } else {
+                System.out.println("You must write the number of the word.");
+                removeCommand();
+            }
         } else {
-            System.out.println("You must write the number of the word.");
+            System.out.println("This list doesn't exist");
             removeCommand();
         }
     }

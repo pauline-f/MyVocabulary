@@ -20,10 +20,10 @@ public class FileManager {
      */
     public void saveFile(AllLists lists) {
         try (PrintWriter writer = new PrintWriter(FILENAME)) {
-            for (int i = 0; i < lists.lists.size(); i++) {
-                for (int j = 0; j < lists.lists.get(i).numberOfWords(); j++) {
-                    writer.write(lists.lists.get(i).getName() + ";");
-                    writer.write(lists.lists.get(i).getWordAsCSV(j));
+            for (int i = 0; i < lists.list.size(); i++) {
+                for (int j = 0; j < lists.list.get(i).numberOfWords(); j++) {
+                    writer.write(lists.list.get(i).getName() + ";");
+                    writer.write(lists.list.get(i).getWordAsCSV(j));
                     writer.println();
                 }
             }
@@ -37,7 +37,7 @@ public class FileManager {
      * @return AllLists
      */
     public AllLists readFile() {
-        AllLists lists = new AllLists();
+        AllLists allLists = new AllLists();
         try (BufferedReader br = new BufferedReader(new FileReader(FILENAME))) {
             String currentLine;
 
@@ -46,12 +46,12 @@ public class FileManager {
 
                 Word word = new Word(wordFile[1], wordFile[2], Integer.parseInt(wordFile[3]), Integer.parseInt(wordFile[4]));
 
-                if (!lists.lists.isEmpty()) {
+                if (!allLists.list.isEmpty()) {
                     boolean newList = false;
                     int i = 0;
 
-                    while (i < lists.lists.size() && !newList) {
-                        if (lists.lists.get(i).getName().equals(wordFile[0])) {
+                    while (i < allLists.list.size() && !newList) {
+                        if (allLists.list.get(i).getName().equals(wordFile[0])) {
                             newList = true;
                         } else {
                             i++;
@@ -59,18 +59,17 @@ public class FileManager {
                     }
 
                     if (!newList) {
-                        addListAndWord(lists, wordFile[0], word);
+                        addListAndWord(allLists, wordFile[0], word);
                     } else {
-                        lists.lists.get(i).addWord(word);
+                        allLists.list.get(i).addWord(word);
                     }
                 } else {
-                    addListAndWord(lists, wordFile[0], word);
+                    addListAndWord(allLists, wordFile[0], word);
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
         }
-        return lists;
+        return allLists;
     }
 
     private void addListAndWord(AllLists lists, String name, Word word) {

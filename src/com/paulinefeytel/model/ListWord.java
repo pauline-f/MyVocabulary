@@ -30,17 +30,26 @@ public class ListWord {
         return "The list " + name + " has " + numberOfWords() + " words.";
     }
 
+    /**
+     * Removes a word.
+     * @param index The index of the Word to be removed
+     * @return a boolean if the word was removed or not
+     */
     public boolean removeWord(int index) {
         if (index >= 0 && index < listWord.size()) {
             listWord.remove(index);
             return true;
         }
         else {
-            System.out.println("You must write the number of the word.");
             return false;
         }
     }
 
+    /**
+     * Finds a Word
+     * @param word word searched
+     * @return a boolean if the word was found or not
+     */
     public boolean findWord(String word) {
         int i = 0;
         boolean find = false;
@@ -50,11 +59,7 @@ public class ListWord {
             }
             i++;
         }
-        if (find == true) {
-            return true;
-        } else {
-            return false;
-        }
+        return find;
     }
 
     public String displayAllWords() {

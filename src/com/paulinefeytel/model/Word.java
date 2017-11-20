@@ -61,7 +61,8 @@ public class Word {
     public String getWordWithScore() {
         double percentage = 0;
         if (count != 0) {
-            percentage = score / count * 100;
+            percentage = (double)score / (double)count * 100;
+            percentage = Math.round(percentage);
         }
         return word + " - " + translation + " - Score: " + score + " / " + count + " - " + percentage + "%";
     }

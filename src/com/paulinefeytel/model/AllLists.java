@@ -7,33 +7,33 @@ import java.util.ArrayList;
  */
 public class AllLists {
 
-    public ArrayList<ListWord> lists;
+    public ArrayList<ListWord> list;
 
     public AllLists() {
-        this.lists = new ArrayList<>();
+        this.list = new ArrayList<>();
     }
 
     public void addList(ListWord list) {
-        this.lists.add(list);
+        this.list.add(list);
     }
 
     public int countLists() {
-        return lists.size();
+        return list.size();
     }
 
     public void displayAllLists() {
-        for (ListWord listW: lists) {
+        for (ListWord listW: list) {
             System.out.println(listW.getName());
         }
     }
 
     /**
      * Allow to find a list with the name
-     * @param name
+     * @param name Name of the list searched
      * @return the list of word found
      */
     public ListWord findAList(String name) {
-        for (ListWord list: lists) {
+        for (ListWord list: list) {
             if (list.getName().equals(name)) {
                 return list;
             }

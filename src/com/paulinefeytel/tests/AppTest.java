@@ -12,11 +12,16 @@ public class AppTest {
     @Test
     public void createNewList() {
         App app = new App();
-        AllLists allLists = new AllLists();
-        ListWord list = new ListWord("colors");
-        allLists.addList(list);
-        assertEquals(list, app.createNewList("food"));
+        ListWord list = app.createNewList("food");
+        assertNotNull(list);
     }
 
-
+    @Test
+    public void createSameNewList() {
+        App app = new App();
+        ListWord list1 = app.createNewList("food");
+        ListWord list2 = app.createNewList("food");
+        assertNotNull(list1);
+        assertNull(list2);
+    }
 }
