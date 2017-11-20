@@ -18,7 +18,7 @@ Features available on command line version:
 - Save the lists of words
 
 
-Features available on Android version:
+Features available on [Android version](https://github.com/pauline-f/MyVocabularyAndroid):
 - Create lists
 - Add words
 - Display all the lists
